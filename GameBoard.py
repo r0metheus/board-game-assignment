@@ -1,0 +1,78 @@
+from GameRules import valid_moves
+from Players import Players
+
+class GameBoard:
+    def __init__(self):
+        self.board = self.build_board()
+
+    def build_board(self):
+        board = [[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,]]
+        #setup players
+        #player A
+        board[0][6] = Players.PLAYERA
+        board[1][5] = Players.PLAYERA
+        board[1][6] = Players.PLAYERA
+        board[2][5] = Players.PLAYERA
+        board[2][6] = Players.PLAYERA
+        board[2][7] = Players.PLAYERA
+        board[3][4] = Players.PLAYERA
+        board[3][5] = Players.PLAYERA
+        board[3][6] = Players.PLAYERA
+        board[3][7] = Players.PLAYERA
+
+
+        #AI
+        board[16][6] = Players.AI
+        board[15][5] = Players.AI
+        board[15][6] = Players.AI
+        board[14][5] = Players.AI
+        board[14][6] = Players.AI
+        board[14][7] = Players.AI
+        board[13][4] = Players.AI
+        board[13][5] = Players.AI
+        board[13][6] = Players.AI
+        board[13][7] = Players.AI
+
+        return board
+
+    def print_board(self):
+        for row in range(len(self.board)):
+            for col in range(len(self.board[0])):
+                print(self.board[row][col], end=" ")
+            print("\n")
+
+    def move(self, src, dest):
+        if self.board[dest[0]][dest[1]] == 0 or self.board[src[0]][src[1]] == 0:
+            return
+        if self.board[src[0]][src[1]] == 1:
+            return
+        if dest not in valid_moves(self.board, src):
+            return
+        self.board[dest[0]][dest[1]] = self.board[src[0]][src[1]] 
+        self.board[src[0]][src[1]] = 1
+        self.print_board()
+
+    def get_board(self):
+        return self.board
+
+    def clear_hints(self):
+        for row in range(len(self.board)):
+            for col in range(len(self.board[0])):
+                if self.board[row][col] == -1:
+                    self.board[row][col] = 1
