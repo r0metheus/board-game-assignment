@@ -6,6 +6,7 @@ import pygame
 from Cell import Cell
 import pygame
 import random
+import sys
 
 WIDTH = 700
 HEIGHT = 700
@@ -96,6 +97,8 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+            pygame.quit()
+            sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN and turn == Players.PLAYERA:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             rect2 = pygame.Rect(mouse_x, mouse_y, RADIUS//2, RADIUS//2)
