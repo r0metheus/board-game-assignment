@@ -8,6 +8,8 @@ import pygame
 import random
 import sys
 
+BACKGROUND_COLOR = [250, 237, 192]
+
 WIDTH = 700
 HEIGHT = 700
 RADIUS = 20
@@ -16,7 +18,7 @@ H_OFF = 110
 pygame.init()
 size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
-screen.fill([255, 255, 255])
+screen.fill(BACKGROUND_COLOR)
 
 
 board = GameBoard()
@@ -134,7 +136,7 @@ while not done:
     if winner != False:
         print("The winner is " + str(winner))
         done = True
-    screen.fill([255, 255, 255])
+    screen.fill(BACKGROUND_COLOR)
     draw_board(board.get_board(), hint_board)
     pygame.display.update()
 
