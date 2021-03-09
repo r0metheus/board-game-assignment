@@ -33,7 +33,7 @@ def check_if_in_board(board, pos):
     return 0 <= pos[0]  and pos[0] < len(board) and 0 <= pos[1] and pos[1] < len(board[0]) and board[pos[0]][pos[1]] != 0
 
 def is_empty(board, pos):
-    return board[pos[0]][pos[1]] == 1 and not is_pebble(board, pos) and check_if_in_board(board, pos)
+    return check_if_in_board(board, pos) and board[pos[0]][pos[1]] == 1 and not is_pebble(board, pos)
 
 def is_pebble(board, pos):
     return board[pos[0]][pos[1]] == AI or board[pos[0]][pos[1]] == PLAYERA
@@ -55,18 +55,40 @@ def get_neighbours(board, pos):
 
     return neighbours
 
-## elimitate diagonals from double jump check
 
-def double_jumps(board, positions):
+def get_neighbours_from_direction(board, p, direction):
+    x = p[0] + direction[0]
+    y = p[1] + direction[1]
+   
+    if is_empty(board, (x, y)) and check_if_in_board(board, (x, y)):
+        return (x, y)
+    return None
+
+def double_jumps(board, positions, start_pos):
     #for each pos, check if there is a neighbour not empty
     #add all new neighbour to array
     all_jumps = []
-    for p in positions:
-        if not is_empty(board, p):
-            neighbours = get_neighbours(board, p)
-            for n in neighbours:
-                if is_empty(board, n):
-                    all_jumps.append(n)
+    to_check = positions.copy()
+
+    while len(to_check) > 0:
+        p = to_check.pop()
+        #check if the selected node is a pebble we can jump on
+        if is_pebble(board, p):
+            #from which direction we get to the pebble p from start_pos?
+            direction = (p[0] - start_pos[0], p[1] - start_pos[1])
+            #adjust the direction 
+            if start_pos[0] % 2 == 0:
+                #do not modify the direction if the jump is horizontal
+                if direction != (0, 1) and direction != (0, -1):
+                    direction = (direction[0], direction[1] + 1)
+            else:
+                if direction != (0, 1) and direction != (0, -1):
+                    direction = (direction[0], direction[1] - 1)
+
+            neighbour = get_neighbours_from_direction(board, p, direction)
+            if neighbour is not None:
+                to_check.append(neighbour)
+                all_jumps.append(neighbour)
     return all_jumps
 
 def valid_moves(board, pos, player):
@@ -74,7 +96,7 @@ def valid_moves(board, pos, player):
     to_remove = []
     
     #check for double jumps
-    for j in double_jumps(board, valid_pos):
+    for j in double_jumps(board, valid_pos, pos):
         valid_pos.append(j)
     
     #if pos is in the opposite home, it cannot exit
@@ -97,7 +119,7 @@ def valid_moves(board, pos, player):
             to_remove.append(p)
     
     for p in to_remove:
-        valid_pos.remove(p)
+        if p in valid_pos:
+            valid_pos.remove(p)
 
     return valid_pos
-    
