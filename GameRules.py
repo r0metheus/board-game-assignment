@@ -60,20 +60,21 @@ def get_neighbours_from_direction(board, p, direction):
     x = p[0] + direction[0]
     y = p[1] + direction[1]
    
-    if is_empty(board, (x, y)) and check_if_in_board(board, (x, y)):
+    if is_empty(board, (x, y)):
         return (x, y)
     return None
 
-def double_jumps(board, positions, start_pos):
+def double_jumps(board, positions, visited, start_pos):
     #for each pos, check if there is a neighbour not empty
     #add all new neighbour to array
-    all_jumps = []
-    to_check = positions.copy()
-
+    to_check = get_neighbours(board, start_pos)
+    #dfs approach
     while len(to_check) > 0:
         p = to_check.pop()
+        
         #check if the selected node is a pebble we can jump on
-        if is_pebble(board, p):
+        if is_pebble(board, p) and p not in visited:
+            visited.append(p)
             #from which direction we get to the pebble p from start_pos?
             direction = (p[0] - start_pos[0], p[1] - start_pos[1])
             #adjust the direction 
@@ -86,18 +87,17 @@ def double_jumps(board, positions, start_pos):
                     direction = (direction[0], direction[1] - 1)
 
             neighbour = get_neighbours_from_direction(board, p, direction)
+
             if neighbour is not None:
-                to_check.append(neighbour)
-                all_jumps.append(neighbour)
-    return all_jumps
+                positions.append(neighbour)
+                double_jumps(board, positions, visited, neighbour)
 
 def valid_moves(board, pos, player):
     valid_pos = get_neighbours(board, pos)
     to_remove = []
     
     #check for double jumps
-    for j in double_jumps(board, valid_pos, pos):
-        valid_pos.append(j)
+    double_jumps(board, valid_pos, [], pos)
     
     #if pos is in the opposite home, it cannot exit
     if player == AI and pos in player_a_home:
