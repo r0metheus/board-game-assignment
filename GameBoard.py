@@ -6,7 +6,7 @@ class GameBoard:
         self.board = self.build_board()
 
     def build_board(self):
-        board = [[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        board =[[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
@@ -24,30 +24,30 @@ class GameBoard:
                 [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,]]
         #setup players
+        #player AI
+        board[0][6] = Players.AI
+        board[1][5] = Players.AI
+        board[1][6] = Players.AI
+        board[2][5] = Players.AI
+        board[2][6] = Players.AI
+        board[2][7] = Players.AI
+        board[3][4] = Players.AI
+        board[3][5] = Players.AI
+        board[3][6] = Players.AI
+        board[3][7] = Players.AI
+
+
         #player A
-        board[0][6] = Players.PLAYERA
-        board[1][5] = Players.PLAYERA
-        board[1][6] = Players.PLAYERA
-        board[2][5] = Players.PLAYERA
-        board[2][6] = Players.PLAYERA
-        board[2][7] = Players.PLAYERA
-        board[3][4] = Players.PLAYERA
-        board[3][5] = Players.PLAYERA
-        board[3][6] = Players.PLAYERA
-        board[3][7] = Players.PLAYERA
-
-
-        #AI
-        board[16][6] = Players.AI
-        board[15][5] = Players.AI
-        board[15][6] = Players.AI
-        board[14][5] = Players.AI
-        board[14][6] = Players.AI
-        board[14][7] = Players.AI
-        board[13][4] = Players.AI
-        board[13][5] = Players.AI
-        board[13][6] = Players.AI
-        board[13][7] = Players.AI
+        board[16][6] = Players.PLAYERA
+        board[15][5] = Players.PLAYERA
+        board[15][6] = Players.PLAYERA
+        board[14][5] = Players.PLAYERA
+        board[14][6] = Players.PLAYERA
+        board[14][7] = Players.PLAYERA
+        board[13][4] = Players.PLAYERA
+        board[13][5] = Players.PLAYERA
+        board[13][6] = Players.PLAYERA
+        board[13][7] = Players.PLAYERA
 
         return board
 
@@ -57,16 +57,15 @@ class GameBoard:
                 print(self.board[row][col], end=" ")
             print("\n")
 
-    def move(self, src, dest):
+    def move(self, src, dest, player):
         if self.board[dest[0]][dest[1]] == 0 or self.board[src[0]][src[1]] == 0:
-            return
+            return False
         if self.board[src[0]][src[1]] == 1:
-            return
-        if dest not in valid_moves(self.board, src):
-            return
-        self.board[dest[0]][dest[1]] = self.board[src[0]][src[1]] 
-        self.board[src[0]][src[1]] = 1
-        self.print_board()
+            return False
+        if dest not in valid_moves(self.board, src, player):
+            return False
+        self.board[dest[0]][dest[1]], self.board[src[0]][src[1]] = self.board[src[0]][src[1]], self.board[dest[0]][dest[1]]
+        return True
 
     def get_board(self):
         return self.board
