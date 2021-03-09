@@ -83,15 +83,21 @@ def draw_board(board, hints):
 
 create_coll(board.get_board())
 selected = None 
-ai_pos = (3,7)
+ai_pos = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
 
 #game loop
 while not done:
     if turn == AI:
-        available_moves = valid_moves(board.get_board(), ai_pos, AI)
+        random_idx = random.randint(0, 9)
+        available_moves = valid_moves(board.get_board(), ai_pos[random_idx], AI)
+        while len(available_moves) == 0:
+            random_idx = random.randint(0, 9)
+            available_moves = valid_moves(board.get_board(), ai_pos[random_idx], AI)
+
         selected_move_ai = random.choice(available_moves)
-        board.move(ai_pos, selected_move_ai, AI)
-        ai_pos = selected_move_ai
+        board.move(ai_pos[random_idx], selected_move_ai, AI)
+        ai_pos.remove(ai_pos[random_idx])
+        ai_pos.append(selected_move_ai)
         turn = PLAYERA
         continue
     for event in pygame.event.get():
