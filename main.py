@@ -1,6 +1,6 @@
 from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, valid_moves
-from Players import Players
+from Players import PLAYERA, AI
 from GameBoard import GameBoard
 import pygame
 from Cell import Cell
@@ -30,7 +30,7 @@ clock = pygame.time.Clock()
 
 coll_rects = []
 
-turn = Players.PLAYERA
+turn = PLAYERA
 
 def create_coll(board):
     for row in range(len(board)):
@@ -66,9 +66,9 @@ def draw_board(board, hints):
                 #     pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=1)
                 if board[row][col] == 1:
                     pygame.draw.circle(screen, [0,0,0], (x, y), RADIUS, width=1)
-                elif board[row][col] == Players.PLAYERA:
+                elif board[row][col] == PLAYERA:
                     pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=0)
-                elif board[row][col] == Players.AI:
+                elif board[row][col] == AI:
                     pygame.draw.circle(screen, [0,0,255], (x, y), RADIUS, width=0)
                 
     for row in range(len(hints)):
@@ -87,19 +87,19 @@ ai_pos = (3,7)
 
 #game loop
 while not done:
-    if turn == Players.AI:
-        available_moves = valid_moves(board.get_board(), ai_pos, Players.AI)
+    if turn == AI:
+        available_moves = valid_moves(board.get_board(), ai_pos, AI)
         selected_move_ai = random.choice(available_moves)
-        board.move(ai_pos, selected_move_ai, Players.AI)
+        board.move(ai_pos, selected_move_ai, AI)
         ai_pos = selected_move_ai
-        turn = Players.PLAYERA
+        turn = PLAYERA
         continue
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
             pygame.quit()
             sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and turn == Players.PLAYERA:
+        if event.type == pygame.MOUSEBUTTONDOWN and turn == PLAYERA:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             rect2 = pygame.Rect(mouse_x, mouse_y, RADIUS//2, RADIUS//2)
             for c in coll_rects:
@@ -107,7 +107,7 @@ while not done:
                     print("Mouse collided with " + str(c.get_row_col()))
                     clear_hints(hint_board)
                     if selected is None:
-                        hints = valid_moves(board.get_board(), c.get_row_col(), Players.PLAYERA)
+                        hints = valid_moves(board.get_board(), c.get_row_col(), PLAYERA)
                         print("Hints: " + str(hints))
                         for hint in hints:
                             if board.get_board()[hint[0]][hint[1]] == 1:
@@ -119,8 +119,8 @@ while not done:
                             selected = None
                             print("Reset selected")
                         else:
-                            if board.move(selected, c.get_row_col(), Players.PLAYERA):
-                                turn = Players.AI
+                            if board.move(selected, c.get_row_col(), PLAYERA):
+                                turn = AI
                                 print("Move and reset selected")
                             selected = None
                     break

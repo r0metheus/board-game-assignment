@@ -1,5 +1,5 @@
 from GameRules import valid_moves
-from Players import Players
+from Players import AI, PLAYERA
 
 class GameBoard:
     def __init__(self):
@@ -25,29 +25,29 @@ class GameBoard:
                 [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,]]
         #setup players
         #player AI
-        board[0][6] = Players.AI
-        board[1][5] = Players.AI
-        board[1][6] = Players.AI
-        board[2][5] = Players.AI
-        board[2][6] = Players.AI
-        board[2][7] = Players.AI
-        board[3][4] = Players.AI
-        board[3][5] = Players.AI
-        board[3][6] = Players.AI
-        board[3][7] = Players.AI
+        board[0][6] = AI
+        board[1][5] = AI
+        board[1][6] = AI
+        board[2][5] = AI
+        board[2][6] = AI
+        board[2][7] = AI
+        board[3][4] = AI
+        board[3][5] = AI
+        board[3][6] = AI
+        board[3][7] = AI
 
 
         #player A
-        board[16][6] = Players.PLAYERA
-        board[15][5] = Players.PLAYERA
-        board[15][6] = Players.PLAYERA
-        board[14][5] = Players.PLAYERA
-        board[14][6] = Players.PLAYERA
-        board[14][7] = Players.PLAYERA
-        board[13][4] = Players.PLAYERA
-        board[13][5] = Players.PLAYERA
-        board[13][6] = Players.PLAYERA
-        board[13][7] = Players.PLAYERA
+        board[16][6] = PLAYERA
+        board[15][5] = PLAYERA
+        board[15][6] = PLAYERA
+        board[14][5] = PLAYERA
+        board[14][6] = PLAYERA
+        board[14][7] = PLAYERA
+        board[13][4] = PLAYERA
+        board[13][5] = PLAYERA
+        board[13][6] = PLAYERA
+        board[13][7] = PLAYERA
 
         return board
 
