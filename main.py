@@ -102,37 +102,40 @@ while not done:
         ai_pos.append(selected_move_ai)
         turn = PLAYERA
         continue
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and turn == PLAYERA:
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            rect2 = pygame.Rect(mouse_x, mouse_y, RADIUS//2, RADIUS//2)
-            for c in coll_rects:
-                if c.rect.collidepoint(mouse_x, mouse_y):
-                    print("Mouse collided with " + str(c.get_row_col()))
-                    clear_hints(hint_board)
-                    if selected is None:
-                        if is_pebble(board.get_board(), c.get_row_col()):
-                            hints = valid_moves(board.get_board(), c.get_row_col(), PLAYERA)
-                            print("Hints: " + str(hints))
-                            for hint in hints:
-                                if board.get_board()[hint[0]][hint[1]] == 1:
-                                    hint_board[hint[0]][hint[1]] = -1
-                            selected = c.get_row_col()
-                            print("selected " + str(selected))
-                    else:
-                        if selected == c.get_row_col():
-                            selected = None
-                            print("Reset selected")
+    elif turn == PLAYERA:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN and turn == PLAYERA:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                rect2 = pygame.Rect(mouse_x, mouse_y, RADIUS//2, RADIUS//2)
+                for c in coll_rects:
+                    if c.rect.collidepoint(mouse_x, mouse_y):
+                        if board.get_board()[c.get_row_col()[0]][c.get_row_col()[1]] == AI:
+                            continue
+                        print("Mouse collided with " + str(c.get_row_col()))
+                        clear_hints(hint_board)
+                        if selected is None:
+                            if is_pebble(board.get_board(), c.get_row_col()):
+                                hints = valid_moves(board.get_board(), c.get_row_col(), PLAYERA)
+                                print("Hints: " + str(hints))
+                                for hint in hints:
+                                    if board.get_board()[hint[0]][hint[1]] == 1:
+                                        hint_board[hint[0]][hint[1]] = -1
+                                selected = c.get_row_col()
+                                print("selected " + str(selected))
                         else:
-                            if board.move(selected, c.get_row_col(), PLAYERA):
-                                turn = AI
-                                print("Move and reset selected")
-                            selected = None
-                    break
+                            if selected == c.get_row_col():
+                                selected = None
+                                print("Reset selected")
+                            else:
+                                if board.move(selected, c.get_row_col(), PLAYERA):
+                                    turn = AI
+                                    print("Move and reset selected")
+                                selected = None
+                        break
     winner = check_win(board.get_board())
     if winner != False:
         print("The winner is " + str(winner))
