@@ -1,5 +1,5 @@
 from pygame.constants import CONTROLLER_BUTTON_START
-from GameRules import check_win, valid_moves
+from GameRules import check_win, is_pebble, valid_moves
 from Players import PLAYERA, AI
 from GameBoard import GameBoard
 import pygame
@@ -115,13 +115,14 @@ while not done:
                     print("Mouse collided with " + str(c.get_row_col()))
                     clear_hints(hint_board)
                     if selected is None:
-                        hints = valid_moves(board.get_board(), c.get_row_col(), PLAYERA)
-                        print("Hints: " + str(hints))
-                        for hint in hints:
-                            if board.get_board()[hint[0]][hint[1]] == 1:
-                                hint_board[hint[0]][hint[1]] = -1
-                        selected = c.get_row_col()
-                        print("selected " + str(selected))
+                        if is_pebble(board.get_board(), c.get_row_col()):
+                            hints = valid_moves(board.get_board(), c.get_row_col(), PLAYERA)
+                            print("Hints: " + str(hints))
+                            for hint in hints:
+                                if board.get_board()[hint[0]][hint[1]] == 1:
+                                    hint_board[hint[0]][hint[1]] = -1
+                            selected = c.get_row_col()
+                            print("selected " + str(selected))
                     else:
                         if selected == c.get_row_col():
                             selected = None
