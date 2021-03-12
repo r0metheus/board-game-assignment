@@ -7,6 +7,7 @@ from Cell import Cell
 import pygame
 import random
 import sys
+from ai import AI
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -33,6 +34,9 @@ clock = pygame.time.Clock()
 coll_rects = []
 
 turn = PLAYERA
+agent = AI()
+
+#print(agent.name)
 
 def create_coll(board):
     for row in range(len(board)):
