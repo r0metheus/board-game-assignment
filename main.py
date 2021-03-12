@@ -7,7 +7,7 @@ from Cell import Cell
 import pygame
 import random
 import sys
-from ai import AI
+from ai import Agent
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -34,7 +34,7 @@ clock = pygame.time.Clock()
 coll_rects = []
 
 turn = PLAYERA
-agent = AI()
+agent = Agent()
 
 #print(agent.name)
 

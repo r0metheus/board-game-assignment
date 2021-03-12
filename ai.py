@@ -1,7 +1,7 @@
 import random
 from heuristics import heuristics
 
-class AI:
+class Agent:
     def __init__(self):
         self.name = self.spawn()
     
