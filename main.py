@@ -34,7 +34,6 @@ clock = pygame.time.Clock()
 coll_rects = []
 
 turn = PLAYERA
-agent = Agent()
 
 def create_coll(board):
     for row in range(len(board)):
@@ -89,10 +88,12 @@ create_coll(board.get_board())
 selected = None 
 ai_pos = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
 
+agent = Agent(board)
+
 #game loop
 while not done:
     if turn == AI:
-        agent.turn(board.get_board())
+        
         random_idx = random.randint(0, 9)
         available_moves = valid_moves(board.get_board(), ai_pos[random_idx], AI)
         while len(available_moves) == 0:
