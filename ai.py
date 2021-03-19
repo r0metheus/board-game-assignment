@@ -1,40 +1,24 @@
 import random
 from GameRules import valid_moves
 from copy import deepcopy
-from Players import PLAYERA, AI
+from Players import PLAYER_1, PLAYER_2
 import numpy as np
 import time
 from GameBoard import GameBoard
-from minimax import minimax, minimaxAlphaBeta
-
-max_depth = 3
+from minimax import minimaxAlphaBeta
 
 class Agent:
 
-    def __init__(self):
-        self.name = "Agent Smith " + str(random.randint(100, 200))
-        #self.root = Node(deepcopy(board), AI, None, None)
-
-        #tic = time.perf_counter()
-        #self.tree_build(self.root)
-        #toc = time.perf_counter()
-        #print(f"Tree built in {toc - tic:0.4f} seconds")
-
-        #tic = time.perf_counter()
-        #print(minimax(self.root, max_depth - 1, True, None))
-        #toc = time.perf_counter()
-        #print(f"Minimax returned in {toc - tic:0.4f} seconds")
-
-        #tic = time.perf_counter()
-        #print(minimaxAlphaBeta(self.root, max_depth - 1, float("-inf"), float("inf"), True, None))
-        #toc = time.perf_counter()
-        #print(f"Minimax w/ alpha-beta pruning returned in {toc - tic:0.4f} seconds")
+    def __init__(self, player, depth):
+        self.name = str(player)
+        self.player = player
+        self.depth = depth
 
     def move(self, board):
         tic = time.perf_counter()
-        root = Node(deepcopy(board), AI, None, None)
+        root = Node(deepcopy(board), self.player, None, None)
         self.tree_build(root)
-        index = minimaxAlphaBeta(root, max_depth - 1, float("-inf"), float("inf"), True, None)
+        index = minimaxAlphaBeta(root, self.depth - 1, float("-inf"), float("inf"), True, None, self.player)
 
         toc = time.perf_counter()
         print(f"Agent move took {toc - tic:0.4f} seconds")
@@ -64,21 +48,16 @@ class Agent:
             self.tree_build(child, depth+1)
 
     def subtree_build(self, node, depth):
-        if depth == max_depth:
+        if depth == self.depth:
             return
 
-        if depth % 2 == 0:
-            player = AI
-        else:
-            player = PLAYERA
-
-        my_marbles_positions = self.positions(node.state.get_board(), player)
+        my_marbles_positions = self.positions(node.state.get_board(), self.player)
 
         for src in my_marbles_positions:
-            v_moves = valid_moves(node.state.get_board(), src, player)
+            v_moves = valid_moves(node.state.get_board(), src, self.player)
 
             for dst in v_moves:
-                node.add_child(self.node_create(node, player, src, dst))
+                node.add_child(self.node_create(node, self.player, src, dst))
 
 class Node:
     def __init__(self, board, player, start, end):

@@ -1,5 +1,5 @@
 from GameRules import valid_moves
-from Players import AI, PLAYERA
+from Players import PLAYER_2, PLAYER_1
 import numpy as np
 
 class GameBoard:
@@ -26,29 +26,29 @@ class GameBoard:
                           [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]])
         #setup players
         #player AI
-        board[0][6] = AI
-        board[1][5] = AI
-        board[1][6] = AI
-        board[2][5] = AI
-        board[2][6] = AI
-        board[2][7] = AI
-        board[3][4] = AI
-        board[3][5] = AI
-        board[3][6] = AI
-        board[3][7] = AI
+        board[0][6] = PLAYER_2
+        board[1][5] = PLAYER_2
+        board[1][6] = PLAYER_2
+        board[2][5] = PLAYER_2
+        board[2][6] = PLAYER_2
+        board[2][7] = PLAYER_2
+        board[3][4] = PLAYER_2
+        board[3][5] = PLAYER_2
+        board[3][6] = PLAYER_2
+        board[3][7] = PLAYER_2
 
 
         #player A
-        board[16][6] = PLAYERA
-        board[15][5] = PLAYERA
-        board[15][6] = PLAYERA
-        board[14][5] = PLAYERA
-        board[14][6] = PLAYERA
-        board[14][7] = PLAYERA
-        board[13][4] = PLAYERA
-        board[13][5] = PLAYERA
-        board[13][6] = PLAYERA
-        board[13][7] = PLAYERA
+        board[16][6] = PLAYER_1
+        board[15][5] = PLAYER_1
+        board[15][6] = PLAYER_1
+        board[14][5] = PLAYER_1
+        board[14][6] = PLAYER_1
+        board[14][7] = PLAYER_1
+        board[13][4] = PLAYER_1
+        board[13][5] = PLAYER_1
+        board[13][6] = PLAYER_1
+        board[13][7] = PLAYER_1
 
         return board
 

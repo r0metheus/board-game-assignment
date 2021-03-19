@@ -1,6 +1,6 @@
 from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, is_pebble, valid_moves
-from Players import PLAYERA, AI
+from Players import PLAYER_1, PLAYER_2
 from GameBoard import GameBoard
 import pygame
 from Cell import Cell
@@ -33,7 +33,7 @@ clock = pygame.time.Clock()
 
 coll_rects = []
 
-turn = PLAYERA
+turn = PLAYER_1
 
 def create_coll(board):
     for row in range(len(board)):
@@ -69,9 +69,9 @@ def draw_board(board, hints):
                 #     pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=1)
                 if board[row][col] == 1:
                     pygame.draw.circle(screen, [0,0,0], (x, y), RADIUS, width=1)
-                elif board[row][col] == PLAYERA:
+                elif board[row][col] == PLAYER_1:
                     pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=0)
-                elif board[row][col] == AI:
+                elif board[row][col] == PLAYER_2:
                     pygame.draw.circle(screen, [0,0,255], (x, y), RADIUS, width=0)
                 
     for row in range(len(hints)):
@@ -88,25 +88,25 @@ create_coll(board.get_board())
 selected = None 
 ai_pos = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
 
-agent = Agent()
+agent = Agent(PLAYER_1, 3)
 
 #game loop
 while not done:
-    if turn == AI:
+    if turn == PLAYER_2:
 
         random_idx = random.randint(0, 9)
-        available_moves = valid_moves(board.get_board(), ai_pos[random_idx], AI)
+        available_moves = valid_moves(board.get_board(), ai_pos[random_idx], PLAYER_2)
         while len(available_moves) == 0:
             random_idx = random.randint(0, 9)
-            available_moves = valid_moves(board.get_board(), ai_pos[random_idx], AI)
+            available_moves = valid_moves(board.get_board(), ai_pos[random_idx], PLAYER_2)
 
         selected_move_ai = random.choice(available_moves)
-        board.move(ai_pos[random_idx], selected_move_ai, AI)
+        board.move(ai_pos[random_idx], selected_move_ai, PLAYER_2)
         ai_pos.remove(ai_pos[random_idx])
         ai_pos.append(selected_move_ai)
-        turn = PLAYERA
+        turn = PLAYER_1
         continue
-    elif turn == PLAYERA:
+    elif turn == PLAYER_1:
         #for event in pygame.event.get():
         #    if event.type == pygame.QUIT:
         #        done = True
@@ -142,8 +142,8 @@ while not done:
         #                break
         results = agent.move(board)
         print(results)
-        board.move(results[1][0], results[1][1], PLAYERA)
-        turn = AI
+        board.move(results[1][0], results[1][1], PLAYER_1)
+        turn = PLAYER_2
 
     winner = check_win(board.get_board())
     if winner != False:

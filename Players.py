@@ -1,2 +1,2 @@
-PLAYERA = 2
-AI = 3
+PLAYER_1 = 2
+PLAYER_2 = 4

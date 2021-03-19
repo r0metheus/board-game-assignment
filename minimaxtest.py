@@ -37,5 +37,11 @@ c.add_children(g)
 root.add_children(b)
 root.add_children(c)
 
-print(minimax(root, 2, True,None))
+print(
+    minimax(
+        root,
+        2,
+        True,
+        None,
+        None))
 print(minimaxAlphaBeta(root,2,float("-inf"),float("inf"), True, None))
