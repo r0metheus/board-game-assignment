@@ -3,8 +3,8 @@ from scipy.spatial import distance
 from decimal import Decimal
 from Players import PLAYERA, AI
 
-goal = PLAYERA
-available_goals = [[16, 6], [15, 5], [15, 6], [14, 5], [14, 6], [14, 7], [13, 4], [13, 5], [13, 6], [13, 7]]
+player_goal = PLAYERA
+goal = (16, 6)
 
 def manhattan(a, b):
   mean = 0
@@ -15,6 +15,6 @@ def manhattan(a, b):
 def heuristic(board):
   sum = 0
   for index, value in np.ndenumerate(board):
-    if value == goal:
-      sum = sum + manhattan(index, available_goals)
+    if value == player_goal:
+      sum = sum + distance.euclidean(index, goal)     # manhattan(index, goal)
   return round(sum, 2)

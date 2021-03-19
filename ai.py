@@ -1,22 +1,44 @@
 import random
-from GameRules import valid_moves, check_win
+from GameRules import valid_moves
 from copy import deepcopy
-from heuristics import heuristic
 from Players import PLAYERA, AI
 import numpy as np
 import time
+from GameBoard import GameBoard
+from minimax import minimax, minimaxAlphaBeta
 
-max_depth = 4
+max_depth = 3
+
 class Agent:
 
-    def __init__(self, board):
+    def __init__(self):
         self.name = "Agent Smith " + str(random.randint(100, 200))
-        self.root = Node(deepcopy(board), AI, None, None)
+        #self.root = Node(deepcopy(board), AI, None, None)
+
+        #tic = time.perf_counter()
+        #self.tree_build(self.root)
+        #toc = time.perf_counter()
+        #print(f"Tree built in {toc - tic:0.4f} seconds")
+
+        #tic = time.perf_counter()
+        #print(minimax(self.root, max_depth - 1, True, None))
+        #toc = time.perf_counter()
+        #print(f"Minimax returned in {toc - tic:0.4f} seconds")
+
+        #tic = time.perf_counter()
+        #print(minimaxAlphaBeta(self.root, max_depth - 1, float("-inf"), float("inf"), True, None))
+        #toc = time.perf_counter()
+        #print(f"Minimax w/ alpha-beta pruning returned in {toc - tic:0.4f} seconds")
+
+    def move(self, board):
         tic = time.perf_counter()
-        self.tree_build(self.root)
+        root = Node(deepcopy(board), AI, None, None)
+        self.tree_build(root)
+        index = minimaxAlphaBeta(root, max_depth - 1, float("-inf"), float("inf"), True, None)
+
         toc = time.perf_counter()
-        print(f"Tree built in {toc - tic:0.4f} seconds")
-        #self.printTree(self.root)
+        print(f"Agent move took {toc - tic:0.4f} seconds")
+        return index
 
     def printTree(self, node, level = 0):
         print(level*2*' ', (node.startPos, node.endPos, node.player))

@@ -101,13 +101,11 @@ def valid_moves(board, pos, player):
     
     #if pos is in the opposite home, it cannot exit
     if player == AI and pos in player_a_home:
-        print("AI got in PLAYER A home")
         #can move only in current home
         for p in valid_pos:
             if p not in player_a_home:
                 to_remove.append(p)
     elif player == PLAYERA and pos in ai_home:
-        print("PLAYER A got in AI home")
         for p in valid_pos:
             if p not in ai_home:
                 to_remove.append(p)
