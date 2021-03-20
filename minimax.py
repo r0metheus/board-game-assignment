@@ -1,6 +1,14 @@
 from heuristics import heuristic
+from GameRules import check_win
+from Players import PLAYER_1,PLAYER_2
 
 def minimax(node, depth, maximizingPlayer, move, player):
+  if (check_win(node.state.get_board())==PLAYER_1):
+    move=(node.startPos, node.endPos)
+    if (maximizingPlayer):
+      value=float("inf")
+    else:
+      value=float("-inf")
   if (depth == 0):
     return heuristic(node.state.get_board(), player), move
 
@@ -25,6 +33,12 @@ def minimax(node, depth, maximizingPlayer, move, player):
     return value, move
 
 def minimaxAlphaBeta(node, depth, alpha, beta, maximizingPlayer, move, player):
+  if (check_win(node.state.get_board())==PLAYER_1):
+    move=(node.startPos, node.endPos)
+    if (maximizingPlayer):
+      value=float("inf")
+    else:
+      value=float("-inf")
   if (depth == 0):
     return heuristic(node.state.get_board(), player), move
 
