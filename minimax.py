@@ -3,7 +3,7 @@ from GameRules import check_win
 from Players import PLAYER_1,PLAYER_2
 
 def minimax(node, depth, maximizingPlayer, move, player):
-  if (check_win(node.state.get_board())==PLAYER_1):
+  if (check_win(node.state.get_board()) != False):
     move=(node.startPos, node.endPos)
     if (maximizingPlayer):
       value=float("inf")
@@ -11,7 +11,6 @@ def minimax(node, depth, maximizingPlayer, move, player):
       value=float("-inf")
   if (depth == 0):
     return heuristic(node.state.get_board(), player), move
-
   if (maximizingPlayer):
     value = float("-inf")
     move = ""
