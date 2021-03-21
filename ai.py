@@ -1,11 +1,12 @@
 import random
 from GameRules import valid_moves
 from copy import deepcopy
-from Players import PLAYER_1, PLAYER_2
+from Players import RED_PLAYER, BLUE_PLAYER
 import numpy as np
 import time
 from GameBoard import GameBoard
-from minimax import minimaxAlphaBeta
+from minimax import minimaxAlphaBeta, minimax
+from Players import other
 
 class Agent:
 
@@ -18,6 +19,8 @@ class Agent:
         tic = time.perf_counter()
         root = Node(deepcopy(board), self.player, None, None)
         self.tree_build(root)
+        #print(self.name+" tree")
+        #self.printTree(root)
         index = minimaxAlphaBeta(root, self.depth - 1, float("-inf"), float("inf"), True, None, self.player)
 
         toc = time.perf_counter()
@@ -25,7 +28,7 @@ class Agent:
         return index
 
     def printTree(self, node, level = 0):
-        print(level*2*' ', (node.startPos, node.endPos, node.player))
+        print("Depth: "+str(level), (node.startPos, node.endPos, node.player))
         for child in node.children:
             self.printTree(child, level + 1)
 
@@ -51,13 +54,18 @@ class Agent:
         if depth == self.depth:
             return
 
-        my_marbles_positions = self.positions(node.state.get_board(), self.player)
+        if depth%2 != 0:
+            player = self.player
+        else:
+            player = other(self.player)
+
+        my_marbles_positions = self.positions(node.state.get_board(), player)
 
         for src in my_marbles_positions:
-            v_moves = valid_moves(node.state.get_board(), src, self.player)
+            v_moves = valid_moves(node.state.get_board(), src, player)
 
             for dst in v_moves:
-                node.add_child(self.node_create(node, self.player, src, dst))
+                node.add_child(self.node_create(node, player, src, dst))
 
 class Node:
     def __init__(self, board, player, start, end):

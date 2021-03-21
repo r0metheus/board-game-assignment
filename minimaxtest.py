@@ -6,7 +6,8 @@ class Node:
         self.state = board
         self.value = value
         self.player = player
-        self.move=move
+        self.startPos = value
+        self.endPos = value
         self.children = []
 
     def get_board(self):
@@ -38,10 +39,5 @@ root.add_children(b)
 root.add_children(c)
 
 print(
-    minimax(
-        root,
-        2,
-        True,
-        None,
-        None))
+    minimax(root, 2, True, None, None, ))
 print(minimaxAlphaBeta(root,2,float("-inf"),float("inf"), True, None))

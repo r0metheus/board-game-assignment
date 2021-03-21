@@ -1,4 +1,4 @@
-from Players import PLAYER_1, PLAYER_2
+from Players import RED_PLAYER, BLUE_PLAYER
 
 ai_home = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
 player_a_home = [(16,6), (15,5), (15,6), (14,5), (14,6), (14,7), (13,4), (13,5), (13,6), (13,7)]
@@ -22,11 +22,11 @@ odd_directions = [
 ]
 
 def check_win(board):
-    if  board[0][6] == PLAYER_1 and board[1][5] == PLAYER_1 and board[1][6] == PLAYER_1 and board[2][5] == PLAYER_1 and board[2][6] == PLAYER_1 and board[2][7] == PLAYER_1 and board[3][4] == PLAYER_1 and board[3][5] == PLAYER_1 and board[3][6] == PLAYER_1 and board[3][7] == PLAYER_1:
-        return PLAYER_1
+    if  board[0][6] == RED_PLAYER and board[1][5] == RED_PLAYER and board[1][6] == RED_PLAYER and board[2][5] == RED_PLAYER and board[2][6] == RED_PLAYER and board[2][7] == RED_PLAYER and board[3][4] == RED_PLAYER and board[3][5] == RED_PLAYER and board[3][6] == RED_PLAYER and board[3][7] == RED_PLAYER:
+        return RED_PLAYER
 
-    if board[16][6] == PLAYER_2 and board[15][5] == PLAYER_2 and board[15][6] == PLAYER_2 and board[14][5] == PLAYER_2 and board[14][6] == PLAYER_2 and board[14][7] == PLAYER_2 and board[13][4] == PLAYER_2 and board[13][5] == PLAYER_2 and board[13][6] == PLAYER_2 and board[13][7] == PLAYER_2:
-        return PLAYER_2
+    if board[16][6] == BLUE_PLAYER and board[15][5] == BLUE_PLAYER and board[15][6] == BLUE_PLAYER and board[14][5] == BLUE_PLAYER and board[14][6] == BLUE_PLAYER and board[14][7] == BLUE_PLAYER and board[13][4] == BLUE_PLAYER and board[13][5] == BLUE_PLAYER and board[13][6] == BLUE_PLAYER and board[13][7] == BLUE_PLAYER:
+        return BLUE_PLAYER
     return False
 
 def check_if_in_board(board, pos):
@@ -36,7 +36,7 @@ def is_empty(board, pos):
     return check_if_in_board(board, pos) and board[pos[0]][pos[1]] == 1 and not is_pebble(board, pos)
 
 def is_pebble(board, pos):
-    return board[pos[0]][pos[1]] == PLAYER_2 or board[pos[0]][pos[1]] == PLAYER_1
+    return board[pos[0]][pos[1]] == BLUE_PLAYER or board[pos[0]][pos[1]] == RED_PLAYER
 
 def get_neighbours(board, pos):
     neighbours = []
@@ -100,12 +100,12 @@ def valid_moves(board, pos, player):
     double_jumps(board, valid_pos, [], pos)
     
     #if pos is in the opposite home, it cannot exit
-    if player == PLAYER_2 and pos in player_a_home:
+    if player == BLUE_PLAYER and pos in player_a_home:
         #can move only in current home
         for p in valid_pos:
             if p not in player_a_home:
                 to_remove.append(p)
-    elif player == PLAYER_1 and pos in ai_home:
+    elif player == RED_PLAYER and pos in ai_home:
         for p in valid_pos:
             if p not in ai_home:
                 to_remove.append(p)

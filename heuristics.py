@@ -1,16 +1,16 @@
 import numpy as np
 from scipy.spatial import distance
 from decimal import Decimal
-from Players import PLAYER_1, PLAYER_2
+from Players import RED_PLAYER, BLUE_PLAYER
+
+# todo this is weird, player goal is also player base
+goals = {}
+goals[BLUE_PLAYER] = (16, 6)
+goals[RED_PLAYER] = (0, 6)
 
 def heuristic(board, player):
-  if player == PLAYER_1:
-    goal = (16, 6)
-  if player == PLAYER_2:
-    goal = (0, 6)
-
   sum = 0
   for index, value in np.ndenumerate(board):
     if value == player:
-      sum = sum + distance.euclidean(index, goal)
+      sum = sum + distance.euclidean(index, goals[player])
   return round(sum, 2)
