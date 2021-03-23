@@ -42,10 +42,10 @@ def minimaxAlphaBeta(node, depth, alpha, beta, maximizingPlayer, move, player):
   if (depth == 0):
     return heuristic(node.state.get_board(), player), move
 
-  if not(maximizingPlayer):
+  if maximizingPlayer:
     value = float("-inf")
     for child in node.children:
-      minimaxResult = minimaxAlphaBeta(child, depth-1, alpha, beta, not(maximizingPlayer), (node.startPos, node.endPos), player)[0]
+      minimaxResult = minimaxAlphaBeta(child, depth-1, alpha, beta, False, (node.startPos, node.endPos), player)[0]
       if(value < minimaxResult):
         move = (child.startPos, child.endPos)
       value = max(value, minimaxResult)
@@ -57,7 +57,7 @@ def minimaxAlphaBeta(node, depth, alpha, beta, maximizingPlayer, move, player):
   else:
     value = float("inf")
     for child in node.children:
-      minimaxResult = minimaxAlphaBeta(child, depth-1, alpha, beta, not(maximizingPlayer), (node.startPos, node.endPos), player)[0]
+      minimaxResult = minimaxAlphaBeta(child, depth-1, alpha, beta, True, (node.startPos, node.endPos), player)[0]
       if (value > minimaxResult):
         move = (child.startPos, child.endPos)
       value = min(value, minimaxResult)

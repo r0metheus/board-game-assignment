@@ -1,12 +1,9 @@
-import random
 from GameRules import valid_moves
 from copy import deepcopy
-from Players import RED_PLAYER, BLUE_PLAYER
 import numpy as np
 import time
-from GameBoard import GameBoard
-from minimax import minimaxAlphaBeta, minimax
-from Players import other
+from minimax import minimaxAlphaBeta
+from Players import other, BLUE_PLAYER, RED_PLAYER
 
 class Agent:
 
@@ -18,13 +15,17 @@ class Agent:
     def move(self, board):
         tic = time.perf_counter()
         root = Node(deepcopy(board), self.player, None, None)
+
         self.tree_build(root)
-        #print(self.name+" tree")
+
+        #print("Three of player: "+self.name)
         #self.printTree(root)
-        index = minimaxAlphaBeta(root, self.depth - 1, float("-inf"), float("inf"), True, None, self.player)
+
+        index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player)
 
         toc = time.perf_counter()
-        print(f"Agent move took {toc - tic:0.4f} seconds")
+        print(f"Agent tree building and move took {toc - tic:0.4f} seconds")
+
         return index
 
     def printTree(self, node, level = 0):
@@ -51,7 +52,7 @@ class Agent:
             self.tree_build(child, depth+1)
 
     def subtree_build(self, node, depth):
-        if depth == self.depth:
+        if depth == self.depth + 1:
             return
 
         if depth%2 != 0:
@@ -62,10 +63,12 @@ class Agent:
         my_marbles_positions = self.positions(node.state.get_board(), player)
 
         for src in my_marbles_positions:
-            v_moves = valid_moves(node.state.get_board(), src, player)
+            v_dst = valid_moves(node.state.get_board(), src, player)
 
-            for dst in v_moves:
-                node.add_child(self.node_create(node, player, src, dst))
+            for dst in v_dst:
+                if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):
+                    node.add_child(self.node_create(node, player, src, dst))
+
 
 class Node:
     def __init__(self, board, player, start, end):
