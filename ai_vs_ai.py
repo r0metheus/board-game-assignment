@@ -94,8 +94,6 @@ while not done:
             pygame.quit()
             sys.exit()
 
-    winner = check_win(board.get_board())
-
     if turn == BLUE_PLAYER:
         results_2 = agent_2.move(board)
         print("BLUE_PLAYER: "+str(results_2))
