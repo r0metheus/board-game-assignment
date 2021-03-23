@@ -83,8 +83,8 @@ def draw_board(board, hints):
 create_coll(board.get_board())
 selected = None 
 
-agent_1 = Agent(RED_PLAYER, 2, CLUSTERING)
-agent_2 = Agent(BLUE_PLAYER, 2, CLUSTERING)
+agent_1 = Agent(RED_PLAYER, 2, RANDOM)
+agent_2 = Agent(BLUE_PLAYER, 2, RANDOM)
 
 #game loop
 while not done:

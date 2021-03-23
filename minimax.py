@@ -36,9 +36,9 @@ def minimaxAlphaBeta(node, depth, alpha, beta, maximizingPlayer, move, player, k
   if (check_win(node.state.get_board())!= False):
     move=(node.startPos, node.endPos)
     if (maximizingPlayer):
-      value=float("inf")
+      return float("inf"), move
     else:
-      value=float("-inf")
+      return float("-inf"), move
   if (depth == 0):
     return heuristic(node.state.get_board(), player, kind), move
 
