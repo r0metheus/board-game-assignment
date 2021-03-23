@@ -7,6 +7,7 @@ from Cell import Cell
 import pygame
 import sys
 from ai import Agent
+from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -82,8 +83,8 @@ def draw_board(board, hints):
 create_coll(board.get_board())
 selected = None 
 
-agent_1 = Agent(RED_PLAYER, 3)
-agent_2 = Agent(BLUE_PLAYER, 3)
+agent_1 = Agent(RED_PLAYER, 2, CLUSTERING)
+agent_2 = Agent(BLUE_PLAYER, 2, CLUSTERING)
 
 #game loop
 while not done:

@@ -7,10 +7,11 @@ from Players import other, BLUE_PLAYER, RED_PLAYER
 
 class Agent:
 
-    def __init__(self, player, depth):
+    def __init__(self, player, depth, heur):
         self.name = str(player)
         self.player = player
         self.depth = depth
+        self.heur = heur
 
     def move(self, board):
         tic = time.perf_counter()
@@ -21,7 +22,7 @@ class Agent:
         #print("Three of player: "+self.name)
         #self.printTree(root)
 
-        index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player)
+        index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player, self.heur)
 
         toc = time.perf_counter()
         print(f"Agent tree building and move took {toc - tic:0.4f} seconds")
