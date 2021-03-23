@@ -95,19 +95,17 @@ while not done:
         print("BLUE_PLAYER: "+str(results_2))
         board.move(results_2[1][0], results_2[1][1], BLUE_PLAYER)
         turn = RED_PLAYER
-        continue
-
-    if turn == RED_PLAYER:
+    elif turn == RED_PLAYER:
         results_1 = agent_1.move(board)
         print("RED_PLAYER: "+str(results_1))
         board.move(results_1[1][0], results_1[1][1], RED_PLAYER)
         turn = BLUE_PLAYER
 
     winner = check_win(board.get_board())
-
     if winner != False:
         print("The winner is " + str(winner))
         done = True
+
     screen.fill(BACKGROUND_COLOR)
     draw_board(board.get_board(), hint_board)
     pygame.display.update()
