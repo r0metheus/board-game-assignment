@@ -12,16 +12,24 @@ class Agent:
         self.player = player
         self.depth = depth
         self.heur = heur
+        self.node_count = 0
 
     def move(self, board):
         tic = time.perf_counter()
+        self.node_count = 0
         root = Node(deepcopy(board), self.player, None, None)
 
         self.tree_build(root)
 
         #print("Three of player: "+self.name)
         #self.printTree(root)
-
+        if self.node_count < 50:
+            self.node_count = 0
+            self.depth += 1
+            print("Increment depth to " + str(self.depth))
+            root = Node(deepcopy(board), self.player, None, None)
+            self.tree_build(root)
+            self.printTree(root)
         index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player, self.heur)
 
         toc = time.perf_counter()
@@ -69,7 +77,7 @@ class Agent:
             for dst in v_dst:
                 if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):
                     node.add_child(self.node_create(node, player, src, dst))
-
+                    self.node_count += 1
 
 class Node:
     def __init__(self, board, player, start, end):
