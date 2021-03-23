@@ -1,3 +1,4 @@
+from heuristics import V_DISPLACEMENT
 from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, is_pebble, valid_moves
 from Players import RED_PLAYER, BLUE_PLAYER
@@ -88,7 +89,7 @@ create_coll(board.get_board())
 selected = None 
 ai_pos = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
 
-agent = Agent(BLUE_PLAYER, 3)
+agent = Agent(BLUE_PLAYER, 3, V_DISPLACEMENT)
 
 #game loop
 while not done:
