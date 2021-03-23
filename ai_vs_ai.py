@@ -5,7 +5,6 @@ from GameBoard import GameBoard
 import pygame
 from Cell import Cell
 import pygame
-import random
 import sys
 from ai import Agent
 
@@ -88,6 +87,12 @@ agent_2 = Agent(BLUE_PLAYER, 3)
 
 #game loop
 while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+            pygame.quit()
+            sys.exit()
+
     winner = check_win(board.get_board())
 
     if turn == BLUE_PLAYER:
