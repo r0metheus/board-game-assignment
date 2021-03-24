@@ -4,7 +4,7 @@ import numpy as np
 
 class GameBoard:
     def __init__(self):
-        self.board = self.build_board()
+        self.board = self.build_board() # Must be changed to self.randomize_board() for random starting positions
 
     def build_board(self):
         board = np.array([[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
@@ -51,6 +51,45 @@ class GameBoard:
         board[13][7] = RED_PLAYER
 
         return board
+
+    def randomize_board(self):
+        board = np.array([[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                          [0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                          [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                          [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                          [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                          [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                          [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                          [0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]])
+    
+        pieces_array = np.array([BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,BLUE_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER,RED_PLAYER])
+        positions_list = np.empty((0,2), int)
+        for row in range(0,13):
+            for column in range(0,16):
+                if board[column][row] == 1:
+                    pos = np.array([[column,row]])
+                    positions_list = np.append(positions_list, pos, axis=0)
+                else:
+                    continue
+        chosen_indexes = np.random.choice(len(positions_list), size=len(pieces_array), replace=False)             
+                    
+        #Place pieces on the board according to the chosen indexes
+        for piece in range(0,20):
+            column = positions_list[chosen_indexes[piece]][0] 
+            row = positions_list[chosen_indexes[piece]][1]
+            board[column][row] = pieces_array[piece]
+        
+        return board
+
 
     def print_board(self):
         for row in range(len(self.board)):
