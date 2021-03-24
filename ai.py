@@ -5,6 +5,7 @@ import time
 from minimax import minimaxAlphaBeta
 from Players import other, BLUE_PLAYER, RED_PLAYER, player_to_string
 from statistics import mean
+MAX_HISTORY = 5
 
 class Agent:
 
@@ -43,22 +44,26 @@ class Agent:
 
         self.tree_build(root)
 
-     #   if self.node_count < 50:
-     #       self.node_count = 0
-     #       self.depth += 1
-     #       root = Node(deepcopy(board), self.player, None, None)
-     #       self.tree_build(root)
+        if self.node_count < 50:
+            self.node_count = 0
+            self.depth += 1
+            root = Node(deepcopy(board), self.player, None, None)
+            self.tree_build(root)
 
         index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player, self.heur)
 
         toc = time.perf_counter()
         print(f"Agent tree building and move took {toc - tic:0.4f} seconds")
 
+        if len(self.history) == MAX_HISTORY:
+            self.history.pop(0)
+
         self.history.append(index[1])
+
         self.gamemoves += 1
         self.movestiming.append(round(toc-tic, 2))
 
-        # print(self.history)
+        #print(self.history)
 
         return index
 
