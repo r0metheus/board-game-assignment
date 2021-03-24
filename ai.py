@@ -3,16 +3,38 @@ from copy import deepcopy
 import numpy as np
 import time
 from minimax import minimaxAlphaBeta
-from Players import other, BLUE_PLAYER, RED_PLAYER
+from Players import other, BLUE_PLAYER, RED_PLAYER, player_to_string
+from statistics import mean
 
 class Agent:
 
     def __init__(self, player, depth, heur):
-        self.name = str(player)
+        self.name = player_to_string(player)
         self.player = player
         self.depth = depth
         self.heur = heur
         self.node_count = 0
+        self.won = 0
+        self.lost = 0
+        self.gamemoves = 0
+        self.history = []
+        self.matchesmoveshistory = []
+        self.movestiming = []
+
+
+    def endgame(self, winner):
+        self.history = []
+        self.matchesmoveshistory.append(self.gamemoves)
+
+        if self.player == winner:
+            self.won += 1
+        else:
+            self.lost += 1
+
+        print("agent: "+self.name, ", won matches: "+str(self.won), ", lost matches: "+str(self.lost),
+              ", match moves: "+str(self.gamemoves), ", avg moves: "+str(round(mean(self.matchesmoveshistory), 2)), ", avg time per move: "+str(round(mean(self.movestiming), 2)))
+
+        self.gamemoves = 0
 
     def move(self, board):
         tic = time.perf_counter()
@@ -21,19 +43,22 @@ class Agent:
 
         self.tree_build(root)
 
-        #print("Three of player: "+self.name)
-        #self.printTree(root)
-        if self.node_count < 50:
-            self.node_count = 0
-            self.depth += 1
-            print("Increment depth to " + str(self.depth))
-            root = Node(deepcopy(board), self.player, None, None)
-            self.tree_build(root)
-            self.printTree(root)
+     #   if self.node_count < 50:
+     #       self.node_count = 0
+     #       self.depth += 1
+     #       root = Node(deepcopy(board), self.player, None, None)
+     #       self.tree_build(root)
+
         index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player, self.heur)
 
         toc = time.perf_counter()
         print(f"Agent tree building and move took {toc - tic:0.4f} seconds")
+
+        self.history.append(index[1])
+        self.gamemoves += 1
+        self.movestiming.append(round(toc-tic, 2))
+
+        # print(self.history)
 
         return index
 
@@ -75,7 +100,8 @@ class Agent:
             v_dst = valid_moves(node.state.get_board(), src, player)
 
             for dst in v_dst:
-                if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):
+                #if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):                # too strong constraint
+                if (src, dst) not in self.history:                                                                          # this is preferable
                     node.add_child(self.node_create(node, player, src, dst))
                     self.node_count += 1
 
