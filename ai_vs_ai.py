@@ -17,6 +17,7 @@ RADIUS = 20
 V_OFF = 50
 H_OFF = 110
 pygame.init()
+pygame.display.set_caption('Chinese Checkers AI')
 size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
 screen.fill(BACKGROUND_COLOR)
