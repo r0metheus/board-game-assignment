@@ -65,14 +65,20 @@ def empty_goal(board, player):
   #remove already occupied positions
   to_remove = []
   for g in goal:
-    if board[g[0]][g[1]] == player:
+    if board[g[0]][g[1]] != 1:
       to_remove.append(g)
   for pos in to_remove:
     goal.remove(pos)
 
-  next_goal = goal[0]
+  if len(goal) == 0:
+    if player == RED_PLAYER:
+      next_goal = blue_player_home[0]
+    if player == BLUE_PLAYER:
+      next_goal = red_player_home[0]
+  else:
+    next_goal = goal[0]
   s = 0
   for index, value in np.ndenumerate(board):
     if value == player:
       s += MAX - abs(next_goal[0]-index[0]) - abs(next_goal[1]-index[1])
-  return round(s, 2)
+  return s
