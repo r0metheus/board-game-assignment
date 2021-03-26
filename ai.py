@@ -6,6 +6,8 @@ from minimax import minimaxAlphaBeta
 from Players import other, BLUE_PLAYER, RED_PLAYER, player_to_string
 from statistics import mean
 MAX_HISTORY = 5
+from graphviz import Digraph
+import uuid
 
 class Agent:
 
@@ -22,7 +24,6 @@ class Agent:
         self.matchesmoveshistory = []
         self.movestiming = []
 
-
     def endgame(self, winner):
         self.history = []
         self.matchesmoveshistory.append(self.gamemoves)
@@ -32,8 +33,8 @@ class Agent:
         else:
             self.lost += 1
 
-        print("agent: "+self.name, ", won matches: "+str(self.won), ", lost matches: "+str(self.lost),
-              ", match moves: "+str(self.gamemoves), ", avg moves: "+str(round(mean(self.matchesmoveshistory), 2)), ", avg time per move: "+str(round(mean(self.movestiming), 2)))
+        #print("agent: "+self.name, ", won matches: "+str(self.won), ", lost matches: "+str(self.lost),
+        #      ", match moves: "+str(self.gamemoves), ", avg moves: "+str(round(mean(self.matchesmoveshistory), 2)), ", avg time per move: "+str(round(mean(self.movestiming), 2)))
 
         self.gamemoves = 0
 
@@ -43,6 +44,12 @@ class Agent:
         root = Node(deepcopy(board), self.player, None, None)
 
         self.tree_build(root)
+
+        #dot = Digraph(comment='Game Tree')
+        #self.print_tree(root, None, None, dot)
+        #print(dot.source)
+        #dot.render('game-tree.gv', view=True)
+        #exit(0)
 
         if self.node_count < 50:
             self.node_count = 0
@@ -67,10 +74,19 @@ class Agent:
 
         return index
 
-    def printTree(self, node, level = 0):
-        print("Depth: "+str(level), (node.startPos, node.endPos, node.player))
+    def print_tree(self, node, parent, name, dot, level=0):
+        if level == 0:
+            node_name = str(uuid.uuid4())
+        else:
+            node_name = name
+
+        node_label = str((node.startPos, node.endPos, "MAX" if player_to_string(node.player) == "RED_PLAYER" else "MIN"))
+        dot.node(name=node_name, label=node_label)
+
         for child in node.children:
-            self.printTree(child, level + 1)
+            child_name = str(uuid.uuid4())
+            self.print_tree(child, node, child_name, dot, level+1)
+            dot.edge(node_name, child_name)
 
     def node_create(self, parent, player, src, dst):
         new_board = deepcopy(parent.state)
