@@ -1,13 +1,14 @@
 from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, is_pebble, valid_moves
-from Players import RED_PLAYER, BLUE_PLAYER
+from Players import RED_PLAYER, BLUE_PLAYER, player_to_string
 from GameBoard import GameBoard
 import pygame
 from Cell import Cell
 import pygame
 import sys
 from ai import Agent
-from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT
+from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
+import random
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -17,12 +18,13 @@ RADIUS = 20
 V_OFF = 50
 H_OFF = 110
 pygame.init()
+pygame.display.set_caption('Chinese Checkers AI')
 size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
 screen.fill(BACKGROUND_COLOR)
 
 board = GameBoard()
-board.print_board()
+#board.print_board()
 
 hint_board = board.get_board().copy()
 
@@ -31,8 +33,6 @@ done = False
 clock = pygame.time.Clock()
 
 coll_rects = []
-
-turn = RED_PLAYER
 
 def create_coll(board):
     for row in range(len(board)):
@@ -83,8 +83,13 @@ def draw_board(board, hints):
 create_coll(board.get_board())
 selected = None 
 
-agent_1 = Agent(RED_PLAYER, 2, RANDOM)
+# CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
+
+agent_1 = Agent(RED_PLAYER, 2, V_DISPLACEMENT)
 agent_2 = Agent(BLUE_PLAYER, 2, RANDOM)
+
+turn = RED_PLAYER #random.choice((RED_PLAYER, BLUE_PLAYER))
+print(player_to_string(turn) + " begins the match")
 
 #game loop
 while not done:
@@ -107,11 +112,13 @@ while not done:
 
     winner = check_win(board.get_board())
     if winner != False:
-        print("The winner is " + str(winner))
+        agent_1.endgame(winner)
+        agent_2.endgame(winner)
+
         done = True
 
     screen.fill(BACKGROUND_COLOR)
     draw_board(board.get_board(), hint_board)
     pygame.display.update()
 
-    clock.tick(60)
+    clock.tick(30)

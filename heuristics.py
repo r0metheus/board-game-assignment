@@ -12,6 +12,7 @@ RANDOM = 0
 EUCLIDEAN = 1
 V_DISPLACEMENT = 2
 CLUSTERING = 3
+EMPTY_GOAL = 4
 
 def heuristic(board, player, kind):
   if kind == RANDOM:
@@ -22,6 +23,8 @@ def heuristic(board, player, kind):
     return v_displacement(board, player)
   if kind == CLUSTERING:
     return clustering(board, player)
+  if kind == EMPTY_GOAL:
+    return empty_goal(board, player)
 
 def euclidean(board, player):
   s = 0
@@ -51,3 +54,31 @@ def clustering(board, player):
         if((x == BLUE_PLAYER or x == RED_PLAYER) and x==y):
           s += MAX - 0.1*distance.euclidean(index, jndex)
   return round(s, 2)
+
+blue_player_home = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4),(3,5),(3,6),(3,7)]
+red_player_home = [(16,6), (15,5), (15,6), (14,5), (14,6), (14,7), (13,4),(13,5),(13,6),(13,7)]
+def empty_goal(board, player):
+  goal = red_player_home.copy()
+  if player == RED_PLAYER:
+    goal = blue_player_home.copy()
+
+  #remove already occupied positions
+  to_remove = []
+  for g in goal:
+    if board[g[0]][g[1]] != 1:
+      to_remove.append(g)
+  for pos in to_remove:
+    goal.remove(pos)
+
+  if len(goal) == 0:
+    if player == RED_PLAYER:
+      next_goal = blue_player_home[0]
+    if player == BLUE_PLAYER:
+      next_goal = red_player_home[0]
+  else:
+    next_goal = goal[0]
+  s = 0
+  for index, value in np.ndenumerate(board):
+    if value == player:
+      s += MAX - abs(next_goal[0]-index[0]) - abs(next_goal[1]-index[1])
+  return s
