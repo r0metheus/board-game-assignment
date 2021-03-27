@@ -8,7 +8,6 @@ import pygame
 import sys
 from ai import Agent
 from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
-import random
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -24,7 +23,7 @@ screen = pygame.display.set_mode(size)
 screen.fill(BACKGROUND_COLOR)
 
 board = GameBoard()
-#board.print_board()
+# board.print_board()
 
 hint_board = board.get_board().copy()
 
@@ -33,6 +32,7 @@ done = False
 clock = pygame.time.Clock()
 
 coll_rects = []
+
 
 def create_coll(board):
     for row in range(len(board)):
@@ -47,11 +47,13 @@ def create_coll(board):
                 y_rect = y - RADIUS // 2
                 coll_rects.append(Cell(row, col, x_rect, y_rect, RADIUS))
 
+
 def clear_hints(board):
-     for row in range(len(board)):
+    for row in range(len(board)):
         for col in range(len(board[0])):
             if board[row][col] == -1:
                 board[row][col] = 1
+
 
 def draw_board(board, hints):
     for row in range(len(board)):
@@ -64,12 +66,12 @@ def draw_board(board, hints):
                     x = col * 40 + H_OFF + RADIUS
 
                 if board[row][col] == 1:
-                    pygame.draw.circle(screen, [0,0,0], (x, y), RADIUS, width=1)
+                    pygame.draw.circle(screen, [0, 0, 0], (x, y), RADIUS, width=1)
                 elif board[row][col] == RED_PLAYER:
-                    pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=0)
+                    pygame.draw.circle(screen, [255, 0, 0], (x, y), RADIUS, width=0)
                 elif board[row][col] == BLUE_PLAYER:
-                    pygame.draw.circle(screen, [0,0,255], (x, y), RADIUS, width=0)
-                
+                    pygame.draw.circle(screen, [0, 0, 255], (x, y), RADIUS, width=0)
+
     for row in range(len(hints)):
         for col in range(len(hints[0])):
             if hints[row][col] == -1:
@@ -78,20 +80,22 @@ def draw_board(board, hints):
                     x = col * 40 + H_OFF
                 else:
                     x = col * 40 + H_OFF + RADIUS
-                pygame.draw.circle(screen, (249,215,28, 127), (x, y), RADIUS, width=0)
+                pygame.draw.circle(screen, (249, 215, 28, 127), (x, y), RADIUS, width=0)
+
 
 create_coll(board.get_board())
-selected = None 
+selected = None
 
 # CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
+DEPTH = 2
 
-agent_1 = Agent(RED_PLAYER, 2, V_DISPLACEMENT)
-agent_2 = Agent(BLUE_PLAYER, 2, RANDOM)
+agent_1 = Agent(RED_PLAYER, DEPTH, EUCLIDEAN)
+agent_2 = Agent(BLUE_PLAYER, DEPTH, EMPTY_GOAL)
 
-turn = RED_PLAYER #random.choice((RED_PLAYER, BLUE_PLAYER))
+turn = RED_PLAYER
 print(player_to_string(turn) + " begins the match")
 
-#game loop
+# game loop
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -101,12 +105,12 @@ while not done:
 
     if turn == BLUE_PLAYER:
         results_2 = agent_2.move(board)
-        print("BLUE_PLAYER: "+str(results_2))
+        print("BLUE_PLAYER: "+str(results_2[1]))
         board.move(results_2[1][0], results_2[1][1], BLUE_PLAYER)
         turn = RED_PLAYER
     elif turn == RED_PLAYER:
         results_1 = agent_1.move(board)
-        print("RED_PLAYER: "+str(results_1))
+        print("RED_PLAYER: "+str(results_1[1]))
         board.move(results_1[1][0], results_1[1][1], RED_PLAYER)
         turn = BLUE_PLAYER
 
@@ -121,4 +125,4 @@ while not done:
     draw_board(board.get_board(), hint_board)
     pygame.display.update()
 
-    clock.tick(30)
+    clock.tick(60)

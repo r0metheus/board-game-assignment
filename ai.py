@@ -1,3 +1,4 @@
+import uuid
 from GameRules import valid_moves
 from copy import deepcopy
 import numpy as np
@@ -5,14 +6,15 @@ import time
 from minimax import minimaxAlphaBeta
 from Players import other, BLUE_PLAYER, RED_PLAYER, player_to_string
 from statistics import mean
+import random
+# from graphviz import Digraph
 MAX_HISTORY = 5
-from graphviz import Digraph
-import uuid
+
 
 class Agent:
 
     def __init__(self, player, depth, heur):
-        self.name = player_to_string(player)
+        self.name = "Agent Smith "+str(random.randint(0, 150))
         self.player = player
         self.depth = depth
         self.heur = heur
@@ -33,8 +35,8 @@ class Agent:
         else:
             self.lost += 1
 
-        #print("agent: "+self.name, ", won matches: "+str(self.won), ", lost matches: "+str(self.lost),
-        #      ", match moves: "+str(self.gamemoves), ", avg moves: "+str(round(mean(self.matchesmoveshistory), 2)), ", avg time per move: "+str(round(mean(self.movestiming), 2)))
+        print(self.name+" played as "+player_to_string(self.player), ", won matches: "+str(self.won), ", lost matches: "+str(self.lost), ", match moves: " +
+              str(self.gamemoves), ", avg moves: "+str(round(mean(self.matchesmoveshistory), 2)), ", avg time per move: "+str(round(mean(self.movestiming), 2)))
 
         self.gamemoves = 0
 
@@ -45,11 +47,10 @@ class Agent:
 
         self.tree_build(root)
 
+        # Graphviz utility
         #dot = Digraph(comment='Game Tree')
         #self.print_tree(root, None, None, dot)
-        #print(dot.source)
         #dot.render('game-tree.gv', view=True)
-        #exit(0)
 
         if self.node_count < 50:
             self.node_count = 0
@@ -60,7 +61,7 @@ class Agent:
         index = minimaxAlphaBeta(root, self.depth, float("-inf"), float("inf"), True, None, self.player, self.heur)
 
         toc = time.perf_counter()
-        print(f"Agent tree building and move took {toc - tic:0.4f} seconds")
+        print(self.name+f" tree building and move took {toc - tic:0.4f} seconds")
 
         if len(self.history) == MAX_HISTORY:
             self.history.pop(0)
@@ -70,11 +71,9 @@ class Agent:
         self.gamemoves += 1
         self.movestiming.append(round(toc-tic, 2))
 
-        #print(self.history)
-
         return index
 
-    def print_tree(self, node, parent, name, dot, level=0):
+    def print_tree(self, node, name, dot, level=0):
         if level == 0:
             node_name = str(uuid.uuid4())
         else:
@@ -85,7 +84,7 @@ class Agent:
 
         for child in node.children:
             child_name = str(uuid.uuid4())
-            self.print_tree(child, node, child_name, dot, level+1)
+            self.print_tree(child, child_name, dot, level+1)
             dot.edge(node_name, child_name)
 
     def node_create(self, parent, player, src, dst):
@@ -101,7 +100,7 @@ class Agent:
                 pos.append(index)
         return pos
 
-    def tree_build(self, node, depth = 1):
+    def tree_build(self, node, depth=1):
         self.subtree_build(node, depth)
         for child in node.children:
             self.tree_build(child, depth+1)
@@ -110,7 +109,7 @@ class Agent:
         if depth == self.depth + 1:
             return
 
-        if depth%2 != 0:
+        if depth % 2 != 0:
             player = self.player
         else:
             player = other(self.player)
@@ -121,10 +120,12 @@ class Agent:
             v_dst = valid_moves(node.state.get_board(), src, player)
 
             for dst in v_dst:
-                #if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):                # too strong constraint
-                if (src, dst) not in self.history:                                                                          # this is preferable
+                # if (player == RED_PLAYER and dst[0]<=src[0]) or (player == BLUE_PLAYER and dst[0]>=src[0]):                # too strong constraint
+                # this is preferable
+                if (src, dst) not in self.history:
                     node.add_child(self.node_create(node, player, src, dst))
                     self.node_count += 1
+
 
 class Node:
     def __init__(self, board, player, start, end):

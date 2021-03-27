@@ -1,12 +1,11 @@
-from heuristics import V_DISPLACEMENT
 from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, is_pebble, valid_moves
-from Players import RED_PLAYER, BLUE_PLAYER
+from Players import RED_PLAYER, BLUE_PLAYER, player_to_string
 from GameBoard import GameBoard
+from heuristics import heuristic_value, EMPTY_GOAL
 import pygame
 from Cell import Cell
 import pygame
-import random
 import sys
 from ai import Agent
 
@@ -35,7 +34,6 @@ clock = pygame.time.Clock()
 
 coll_rects = []
 
-turn = RED_PLAYER
 
 def create_coll(board):
     for row in range(len(board)):
@@ -50,11 +48,13 @@ def create_coll(board):
                 y_rect = y - RADIUS // 2
                 coll_rects.append(Cell(row, col, x_rect, y_rect, RADIUS))
 
+
 def clear_hints(board):
-     for row in range(len(board)):
+    for row in range(len(board)):
         for col in range(len(board[0])):
             if board[row][col] == -1:
                 board[row][col] = 1
+
 
 def draw_board(board, hints):
     for row in range(len(board)):
@@ -70,12 +70,12 @@ def draw_board(board, hints):
                 # else:
                 #     pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=1)
                 if board[row][col] == 1:
-                    pygame.draw.circle(screen, [0,0,0], (x, y), RADIUS, width=1)
+                    pygame.draw.circle(screen, [0, 0, 0], (x, y), RADIUS, width=1)
                 elif board[row][col] == RED_PLAYER:
-                    pygame.draw.circle(screen, [255,0,0], (x, y), RADIUS, width=0)
+                    pygame.draw.circle(screen, [255, 0, 0], (x, y), RADIUS, width=0)
                 elif board[row][col] == BLUE_PLAYER:
-                    pygame.draw.circle(screen, [0,0,255], (x, y), RADIUS, width=0)
-                
+                    pygame.draw.circle(screen, [0, 0, 255], (x, y), RADIUS, width=0)
+
     for row in range(len(hints)):
         for col in range(len(hints[0])):
             if hints[row][col] == -1:
@@ -84,31 +84,31 @@ def draw_board(board, hints):
                     x = col * 40 + H_OFF
                 else:
                     x = col * 40 + H_OFF + RADIUS
-                pygame.draw.circle(screen, (249,215,28, 127), (x, y), RADIUS, width=0)
+                pygame.draw.circle(screen, (249, 215, 28, 127), (x, y), RADIUS, width=0)
+
 
 create_coll(board.get_board())
-selected = None 
-ai_pos = [(0,6), (1,5), (1,6), (2,5), (2,6), (2,7), (3,4), (3,5), (3,6), (3,7)]
+selected = None
+ai_pos = [(0, 6), (1, 5), (1, 6), (2, 5), (2, 6),
+          (2, 7), (3, 4), (3, 5), (3, 6), (3, 7)]
 
-agent = Agent(BLUE_PLAYER, 3, V_DISPLACEMENT)
+depth = 2
+heurist = EMPTY_GOAL
+if len(sys.argv) > 1:
+    DEPTH = int(sys.argv[1].partition("--depth=")[2])
+    HEURISTIC = heuristic_value(sys.argv[2].partition("--heuristic=")[2])
 
-#game loop
+agent = Agent(BLUE_PLAYER, depth, heurist)
+
+turn = RED_PLAYER
+print(player_to_string(turn) + " begins the match")
+
+# game loop
 while not done:
     if turn == BLUE_PLAYER:
         results = agent.move(board)
-        print(results)
+        print(agent.name+": ", results[1])
         board.move(results[1][0], results[1][1], BLUE_PLAYER)
-#
-#        random_idx = random.randint(0, 9)
-#        available_moves = valid_moves(board.get_board(), ai_pos[random_idx], PLAYER_2)
-#        while len(available_moves) == 0:
-#            random_idx = random.randint(0, 9)
-#            available_moves = valid_moves(board.get_board(), ai_pos[random_idx], PLAYER_2)
-
-#        selected_move_ai = random.choice(available_moves)
-#        board.move(ai_pos[random_idx], selected_move_ai, PLAYER_2)
-#        ai_pos.remove(ai_pos[random_idx])
-#        ai_pos.append(selected_move_ai)
         turn = RED_PLAYER
         continue
     elif turn == RED_PLAYER:
@@ -128,7 +128,8 @@ while not done:
                         clear_hints(hint_board)
                         if selected is None:
                             if is_pebble(board.get_board(), c.get_row_col()):
-                                hints = valid_moves(board.get_board(), c.get_row_col(), RED_PLAYER)
+                                hints = valid_moves(
+                                    board.get_board(), c.get_row_col(), RED_PLAYER)
                                 print("Hints: " + str(hints))
                                 for hint in hints:
                                     if board.get_board()[hint[0]][hint[1]] == 1:
