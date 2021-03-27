@@ -95,8 +95,8 @@ ai_pos = [(0, 6), (1, 5), (1, 6), (2, 5), (2, 6),
 depth = 2
 heurist = EMPTY_GOAL
 if len(sys.argv) > 1:
-    DEPTH = int(sys.argv[1].partition("--depth=")[2])
-    HEURISTIC = heuristic_value(sys.argv[2].partition("--heuristic=")[2])
+    depth = int(sys.argv[1].partition("-d=")[2])
+    heurist = heuristic_value(sys.argv[2].partition("-h=")[2])
 
 agent = Agent(BLUE_PLAYER, depth, heurist)
 

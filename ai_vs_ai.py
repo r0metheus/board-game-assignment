@@ -7,7 +7,7 @@ from Cell import Cell
 import pygame
 import sys
 from ai import Agent
-from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
+from heuristics import CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL, heuristic_value
 
 BACKGROUND_COLOR = [250, 237, 192]
 
@@ -87,10 +87,19 @@ create_coll(board.get_board())
 selected = None
 
 # CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
-DEPTH = 2
+depth1 = 2
+heurist1 = EMPTY_GOAL
+depth2 = 2
+heurist2 = EMPTY_GOAL
 
-agent_1 = Agent(RED_PLAYER, DEPTH, EUCLIDEAN)
-agent_2 = Agent(BLUE_PLAYER, DEPTH, EMPTY_GOAL)
+if len(sys.argv) > 1:
+    depth1 = int(sys.argv[1].partition("-d1=")[2])
+    heurist1 = heuristic_value(sys.argv[2].partition("-h1=")[2])
+    depth2 = int(sys.argv[3].partition("-d2=")[2])
+    heurist2 = heuristic_value(sys.argv[4].partition("-h2=")[2])
+
+agent_1 = Agent(RED_PLAYER, depth1, heurist1)
+agent_2 = Agent(BLUE_PLAYER, depth2, heurist2)
 
 turn = RED_PLAYER
 print(player_to_string(turn) + " begins the match")
