@@ -1,7 +1,14 @@
 # Chinese Checkers AI
 ## Install instructions
+The program uses the following libraries:
+* numpy
+* pygame
+* scipy
+* graphiz
+
+To install all the dependencies:
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Usage
@@ -22,3 +29,8 @@ depth = [2, 3, ...]
 heuristic = [EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL, CLUSTERING]
 ```
 
+## Team
+* Claus Lønkjær - s160108
+* Leonardo Zecchin - s203509
+* Francesco Romeo - s210222
+* Nicolò Sponziello - s210226
