@@ -4,7 +4,7 @@ The program uses the following libraries:
 * numpy
 * pygame
 * scipy
-* graphiz
+* graphviz
 
 To install all the dependencies:
 ```
