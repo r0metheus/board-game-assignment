@@ -67,7 +67,7 @@ def clustering(board, player):
                 x = board[index[0], index[1]]
                 y = board[jndex[0], jndex[1]]
                 if((x == BLUE_PLAYER or x == RED_PLAYER) and x == y):
-                    s += MAX - 0.1*distance.euclidean(index, jndex)
+                    s += MAX - 0.034*distance.euclidean(index, jndex)
     return round(s, 2)
 
 

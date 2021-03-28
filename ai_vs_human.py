@@ -2,7 +2,7 @@ from pygame.constants import CONTROLLER_BUTTON_START
 from GameRules import check_win, is_pebble, valid_moves
 from Players import RED_PLAYER, BLUE_PLAYER, player_to_string
 from GameBoard import GameBoard
-from heuristics import heuristic_value, EMPTY_GOAL
+from heuristics import heuristic_value, CLUSTERING
 import pygame
 from Cell import Cell
 import pygame
@@ -93,7 +93,7 @@ ai_pos = [(0, 6), (1, 5), (1, 6), (2, 5), (2, 6),
           (2, 7), (3, 4), (3, 5), (3, 6), (3, 7)]
 
 depth = 2
-heurist = EMPTY_GOAL
+heurist = CLUSTERING
 if len(sys.argv) > 1:
     depth = int(sys.argv[1].partition("-d=")[2])
     heurist = heuristic_value(sys.argv[2].partition("-h=")[2])

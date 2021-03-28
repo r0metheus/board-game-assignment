@@ -88,7 +88,7 @@ selected = None
 
 # CLUSTERING, RANDOM, EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL
 depth1 = 2
-heurist1 = EMPTY_GOAL
+heurist1 = EUCLIDEAN
 depth2 = 2
 heurist2 = EMPTY_GOAL
 
