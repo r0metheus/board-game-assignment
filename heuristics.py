@@ -54,7 +54,7 @@ def v_displacement(board, player):
         if value == player:
             me += MAX - distance.euclidean(index, goals[player])
         if value == other(player):
-            opponent += MAX - distance.euclidean(index, goals[other(player)])
+            opponent += MAX - distance.euclidean(index, goals[player])
     return round(me - opponent, 2)
 
 
