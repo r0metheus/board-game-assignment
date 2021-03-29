@@ -38,7 +38,7 @@ default: depth = 2; h1 = EUCLIDEAN; h2 = EMPTY_GOAL
 python3 ai_vs_ai.py -d1=depth -h1=heuristic -d2=depth -h2=heuristic
 ```
 
-#### Arguments range
+### Arguments range
 ```
 depth = [2, 3, ...]
 heuristic = [EUCLIDEAN, V_DISPLACEMENT, EMPTY_GOAL, CLUSTERING]
